@@ -13,7 +13,7 @@ const Type = {
 function connectWebSocket(that) {
   that.socketOpen = false;
   wx.connectSocket({
-    url: 'ws://172.20.10.2:8000/audioStream', // 替换为实际服务器地址
+    url: 'ws://192.168.150.97:8000/audioStream', // 替换为实际服务器地址
   });
 
   wx.onSocketOpen(function() {
