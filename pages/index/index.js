@@ -1,9 +1,6 @@
-// index.js
 
-// 伪代码：需要一个 util.js 文件来提供 getUserConf
-// const util = require('../../utils/util.js');
+const util = require('../../utils/util.js');
 
-// 伪代码：需要定义消息类型
 const Type = {
   audioFrame: 'audioFrame'
 };
@@ -54,6 +51,20 @@ Page({
     this.recorderManager.onStart(() => {
       console.log('录音已正式开始');
       that.setData({ isRecording: true });
+      if (that.data.socketOpen) {
+        wx.sendSocketMessage({
+          data: JSON.stringify({
+            devType: 'WX',
+            cmd: 'StartAudioUp',
+          }),
+          success: () => {
+            console.log('开始标志发送成功');
+          },
+          fail: (err) => {
+            console.error('开始标志发送失败:', err);
+          }
+        });
+      }
     });
 
     this.recorderManager.onError((err) => {
@@ -66,16 +77,17 @@ Page({
     });
 
     this.recorderManager.onFrameRecorded((res) => {
-      const { frameBuffer, isLastFrame } = res;
+      const { frameBuffer } = res;
       if (that.data.socketOpen) {
-        const message = {
-          type: Type.audioFrame,
+        wx.sendSocketMessage({
           data: frameBuffer,
-          isLastFrame: isLastFrame,
-          timestamp: Date.now()
-        };
-        console.log("onFrameRecorded",res)
-
+          success: () => {
+            console.log('音频帧发送成功');
+          },
+          fail: (err) => {
+            console.error('音频帧发送失败:', err);
+          }
+        });
         // wx.sendSocketMessage(...); // 暂时禁用上传
       }
     });
@@ -83,6 +95,20 @@ Page({
     this.recorderManager.onStop(() => {
       console.log('录音已结束');
       that.setData({ isRecording: false, isButtonPressed: false });
+      if (that.data.socketOpen) {
+        wx.sendSocketMessage({
+          data: JSON.stringify({
+            devType: 'WX',
+            cmd: 'StopAudioUp',
+          }),
+          success: () => {
+            console.log('结束标志发送成功');
+          },
+          fail: (err) => {
+            console.error('结束标志发送失败:', err);
+          }
+        });
+      }
     });
   },
 
@@ -256,6 +282,8 @@ Page({
 
   // 拍照
   takePhoto() {
+    console.log('takePhoto')
+    this.data.canPostImage = true;
     const ctx = wx.createCameraContext();
     ctx.takePhoto({
       quality: 'high',
@@ -272,5 +300,24 @@ Page({
         });
       }
     });
-  }
+  },
+
+  // camera
+  //bindstop="onCameraStop"
+  // binderror="onCameraError"
+  // bindinitdone="onCameraInit"
+  onCameraInit() {
+    this.cameraListner = util.startPostImage.call(this);
+    this.data.canPostImage = true;
+    console.log('Camera initialized');
+  },
+
+  onCameraStop() {
+    util.stopPostImage(this.cameraListner);
+    // clearInterval(this.postImageInterval);
+    this.data.canPostImage = false;
+    this.cameraListner = null;
+    console.log('Camera stopped');
+  },
+  
 });
