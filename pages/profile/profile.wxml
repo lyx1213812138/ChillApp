@@ -1,0 +1,36 @@
+<!-- pages/profile/profile.wxml -->
+<view class="container">
+  <view class="profile-card">
+    <view class="info-item">
+      <text class="label">头像</text>
+      <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
+    </view>
+    <view class="info-item">
+      <text class="label">昵称</text>
+      <text class="value">{{userInfo.nickName}}</text>
+    </view>
+    <view class="info-item">
+      <text class="label">性别</text>
+      <text class="value">{{genders[surveyResult.userInfo.gender]}}</text>
+    </view>
+    <view class="info-item">
+      <text class="label">生日</text>
+      <text class="value">{{surveyResult.userInfo.birthday}}</text>
+    </view>
+  </view>
+
+  <view class="styles-card">
+    <view class="card-title">喜欢的风格</view>
+    <view class="styles-grid">
+      <!-- 这里可以根据 surveyResult.preferredStyles 来展示用户选择的风格图片 -->
+      <block wx:if="{{surveyResult.preferredStyles.length > 0}}">
+        <view class="style-tag" wx:for="{{surveyResult.preferredStyles}}" wx:key="*this">
+          风格ID: {{item}}
+        </view>
+      </block>
+      <block wx:else>
+        <text class="no-styles">暂未选择偏好风格</text>
+      </block>
+    </view>
+  </view>
+</view>

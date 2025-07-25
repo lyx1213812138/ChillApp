@@ -1,7 +1,7 @@
 <!-- 极简设置页 -->
 <scroll-view scroll-y="true" class="settings-bg">
   <!-- 用户信息卡片 -->
-  <view class="card user-card safe-top">
+  <view class="card user-card safe-top" bindtap="handleUserProfileTap">
     <image class="avatar" src="{{userInfo.avatarUrl || '/assets/icons/user.png'}}"></image>
     <view class="user-details">
       <text class="nickname">{{userInfo.nickName || '未登录'}}</text>

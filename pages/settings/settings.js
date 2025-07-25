@@ -78,41 +78,33 @@ Page({
   },
 
   /**
-   * 处理登录/注册
+   * 处理用户点击个人信息区域的事件
    */
-  handleLogin() {
-    if (this.data.userInfo.nickName) {
-      // 已登录，处理切换账号
-      wx.showModal({
-        title: '切换账号',
-        content: '确定要切换当前账号吗？',
+  handleUserProfileTap() {
+    if (this.data.userInfo && this.data.userInfo.nickName) {
+      // 如果已登录，则跳转到个人资料页
+      wx.navigateTo({ url: '/pages/profile/profile' });
+    } else {
+      // 如果未登录，则调用微信登录
+      wx.getUserProfile({
+        desc: '用于完善会员资料', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
         success: (res) => {
-          if (res.confirm) {
-            // 清除用户信息
-            wx.removeStorageSync('userInfo');
-            this.setData({
-              userInfo: {
-                nickName: '',
-                userId: ''
-              }
-            });
-            wx.showToast({
-              title: '已退出登录',
-              icon: 'success'
-            });
-          }
+          const userInfo = {
+            ...res.userInfo,
+            // 你可以在这里添加自定义的userId或其他信息
+            userId: 'user_' + Date.now()
+          };
+          this.setData({
+            userInfo: userInfo
+          });
+          wx.setStorageSync('userInfo', userInfo);
+          wx.showToast({ title: '登录成功', icon: 'success' });
+        },
+        fail: (err) => {
+          console.error('用户拒绝授权:', err);
+          wx.showToast({ title: '您拒绝了授权', icon: 'none' });
         }
       });
-    } else {
-      // 未登录，跳转到登录页面
-      wx.showToast({
-        title: '跳转到登录页面',
-        icon: 'none'
-      });
-      // 实际应用中应该跳转到登录页面
-      // wx.navigateTo({
-      //   url: '/pages/login/login',
-      // });
     }
   },
 
@@ -232,8 +224,9 @@ Page({
    * Lifecycle function--Called when page show
    */
   onShow() {
-    // 页面显示时重新获取权限状态
+    // 页面显示时重新获取权限和用户信息，确保数据最新
     this.getPermissionsStatus();
+    this.getUserInfo();
   },
 
   /**

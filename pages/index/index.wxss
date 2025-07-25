@@ -68,6 +68,27 @@
   word-break: break-all;
 }
 
+.ai-tip-box {
+  width: 100%;
+  padding: 20rpx 30rpx;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 20rpx;
+  margin-bottom: 30rpx;
+  box-sizing: border-box;
+}
+
+.ai-tip-text {
+  color: #fff;
+  font-size: 28rpx;
+  line-height: 1.5;
+  text-align: center;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* 限制最多显示3行 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .controls-wrapper {
   position: absolute;
   bottom: 40rpx;

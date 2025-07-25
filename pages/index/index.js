@@ -19,7 +19,8 @@ Page({
     isRecording: false, // 是否正在录音
     isButtonPressed: false, // 按钮是否被按下
     currentTip: '', // AI提示
-    showSurvey: false // 是否显示问卷
+    showSurvey: false, // 是否显示问卷
+    prefilledInfo: null // 用于预填问卷的用户信息
   },
 
   onLoad() {
@@ -30,8 +31,20 @@ Page({
   },
 
   onReady() {
-    // onReady 中才能获取 camera context
+    // onReady 中可以进行一些初始化，但监听器启动/停止放在 onShow/onHide 中
+  },
+
+  onShow() {
+    // 页面显示时启动摄像头帧监听
     this.initCameraFrameListener();
+  },
+
+  onHide() {
+    // 页面隐藏时停止摄像头帧监听
+    if (this.cameraFrameListener) {
+      this.cameraFrameListener.stop();
+      console.log('[Camera Frame] 摄像头帧数据监听已停止');
+    }
   },
 
   // 初始化录音事件监听
@@ -140,7 +153,7 @@ Page({
     let lastUploadTime = 0;
     const uploadInterval = 100; // 100ms, 对应 10fps
 
-    const listener = cameraContext.onCameraFrame((frame) => {
+    this.cameraFrameListener = cameraContext.onCameraFrame((frame) => {
       const now = Date.now();
       if (now - lastUploadTime < uploadInterval) {
         return; // 未达到上传时间间隔，丢弃此帧
@@ -161,26 +174,78 @@ Page({
     });
 
     // 启动监听
-    listener.start();
+    this.cameraFrameListener.start();
     console.log('[Camera Frame] 摄像头帧数据监听已启动');
   },
 
   checkSurveyStatus() {
     const surveyCompleted = wx.getStorageSync('surveyCompleted');
     if (!surveyCompleted) {
-      this.setData({ showSurvey: true });
+      // 微信新规：wx.getUserProfile 必须由用户点击触发
+      // 因此，我们先显示问卷/授权提示，让用户点击按钮后才调用授权
+      this.setData({ 
+        showSurvey: true 
+      });
     }
+  },
+
+  // 此函数需要绑定到 WXML 中的授权按钮的 tap 事件
+  handleAuthorize() {
+    wx.getUserProfile({
+      desc: '用于完善您的个人资料和偏好',
+      success: (res) => {
+        // 将获取到的用户信息预填到问卷中
+        this.setData({ 
+          prefilledInfo: res.userInfo
+        });
+        wx.showToast({ title: '授权成功', icon: 'success' });
+      },
+      fail: () => {
+        // 如果用户拒绝，可以给一个提示
+        wx.showToast({ title: '授权后可获得个性化推荐', icon: 'none' });
+      }
+    });
   },
 
   onSurveySubmit(e) {
     const surveyResult = e.detail;
     console.log('问卷结果:', surveyResult);
-    wx.setStorageSync('surveyResult', surveyResult);
-    wx.setStorageSync('surveyCompleted', true);
-    this.setData({ showSurvey: false });
-    wx.showToast({
-      title: '感谢您的反馈！',
-      icon: 'success'
+
+    // 上传到云端
+    this.uploadDataToServer(surveyResult);
+  },
+
+  uploadDataToServer(data) {
+    const that = this;
+    wx.showLoading({ title: '正在保存... ', mask: true });
+
+    // 伪代码：你需要替换成你真实的云端API地址
+    const apiUrl = 'https://your-api.com/submit-survey';
+
+    wx.request({
+      url: apiUrl,
+      method: 'POST',
+      data: data,
+      success(res) {
+        if (res.statusCode === 200) {
+          console.log('数据上传成功:', res.data);
+          // 只有上传成功后，才标记问卷已完成
+          wx.setStorageSync('surveyResult', data);
+          wx.setStorageSync('surveyCompleted', true);
+          that.setData({ showSurvey: false });
+          wx.showToast({ title: '感谢您的反馈！', icon: 'success' });
+        } else {
+          // 处理服务器错误
+          wx.showToast({ title: '保存失败，请稍后重试', icon: 'none' });
+        }
+      },
+      fail(err) {
+        console.error('数据上传失败:', err);
+        wx.showToast({ title: '网络错误，请稍后重试', icon: 'none' });
+      },
+      complete() {
+        wx.hideLoading();
+      }
     });
   },
 

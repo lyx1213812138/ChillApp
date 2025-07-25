@@ -7,11 +7,8 @@
       <view class="step-subtitle">让我们更好地为你推荐风格</view>
 
       <view class="form-group">
-        <view class="avatar-container">
-          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-          <button class="avatar-button" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar"></button>
-        </view>
-        <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:input="onNicknameInput"/>
+        <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
+        <view class="nickname">{{userInfo.nickName}}</view>
       </view>
 
       <picker bindchange="onGenderChange" value="{{userInfo.gender}}" range="{{genders}}">

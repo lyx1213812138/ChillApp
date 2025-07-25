@@ -202,6 +202,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  /* 重置 button 默认样式 */
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.share-option::after {
+  border: none;
 }
 
 .share-icon {

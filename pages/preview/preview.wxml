@@ -48,10 +48,10 @@
     <view class="share-panel" catchtap="stopPropagation">
       <view class="share-title">分享到</view>
       <view class="share-options">
-        <view class="share-option" bindtap="shareToFriend">
+        <button class="share-option" open-type="share">
           <view class="share-icon wechat">微信</view>
           <text class="share-text">微信好友</text>
-        </view>
+        </button>
         <view class="share-option" bindtap="shareToTimeline">
           <view class="share-icon moments">朋友圈</view>
           <text class="share-text">朋友圈</text>

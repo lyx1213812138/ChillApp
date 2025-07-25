@@ -3,6 +3,18 @@ Component({
     show: {
       type: Boolean,
       value: false
+    },
+    prefilledInfo: {
+      type: Object,
+      value: null,
+      observer: function(newVal) {
+        if (newVal) {
+          this.setData({
+            'userInfo.avatarUrl': newVal.avatarUrl,
+            'userInfo.nickName': newVal.nickName
+          });
+        }
+      }
     }
   },
 

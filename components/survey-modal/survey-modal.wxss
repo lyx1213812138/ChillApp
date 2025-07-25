@@ -47,36 +47,17 @@
   margin-bottom: 30rpx;
 }
 
-.avatar-container {
-  position: relative; /* 设为相对定位，作为按钮的定位基准 */
+.avatar {
   width: 160rpx;
   height: 160rpx;
+  border-radius: 50%;
   margin-bottom: 20rpx;
-}
-
-.avatar {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%; /* 将图片本身设为圆形 */
-  object-fit: cover;
   background-color: #eee;
 }
 
-.avatar-button {
-  position: absolute; /* 绝对定位，覆盖在图片上 */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0; /* 完全透明 */
-}
-
-.nickname-input {
-  width: 100%;
-  text-align: center;
+.nickname {
   font-size: 32rpx;
-  border-bottom: 1rpx solid #eee;
-  padding-bottom: 10rpx;
+  font-weight: bold;
 }
 
 .picker {
