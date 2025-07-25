@@ -1,10 +1,51 @@
 /**app.wxss**/
-.container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 200rpx 0;
+page {
+  /* 定义全局颜色变量 */
+  --primary-color: #333333; /* 主要行动色/强调色 (深灰/炭黑) */
+  --text-color-primary: #333333; /* 主要文字颜色 */
+  --text-color-secondary: #888888; /* 次要文字颜色 */
+  --background-color-base: #FFFFFF; /* 基础背景色 (白) */
+  --background-color-alt: #F5F5F5; /* 模块/卡片背景色 (极浅灰) */
+  --border-color: #E0E0E0; /* 边框/分割线颜色 */
+  --button-primary-bg: #333333; /* 主要按钮背景色 */
+  --button-primary-text: #FFFFFF; /* 主要按钮文字颜色 */
+  --button-secondary-bg: #F5F5F5; /* 次要按钮背景色 */
+  --button-secondary-text: #333333; /* 次要按钮文字颜色 */
+  --danger-color: #e74c3c; /* 危险/错误操作颜色 */
+
+  /* 全局字体和盒子模型 */
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
   box-sizing: border-box;
+  background-color: var(--background-color-base);
+  color: var(--text-color-primary);
+}
+
+/* 统一按钮基础样式 */
+button {
+  font-weight: 500;
+  border-radius: 8px;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+button::after {
+  border: none; /* 去掉微信按钮默认边框 */
+}
+
+button:active {
+  opacity: 0.8;
+}
+
+.primary-button {
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
+}
+
+.secondary-button {
+  background-color: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+  border: 1px solid var(--border-color);
 } 

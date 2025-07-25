@@ -25,4 +25,4 @@ build/
 # 上传时不要包含 git 仓库自身的隐藏目录（如果你复制了一整个文件夹）
 .git/
 
-privateData.json
+privatedata.js

@@ -8,7 +8,7 @@
 
       <!-- 授权按钮 -->
       <view class="auth-container" wx:if="{{!userInfo.nickName}}">
-        <button class="auth-btn" bindtap="triggerAuthorize">点击授权，完善资料</button>
+        <button class="auth-btn primary-button" bindtap="triggerAuthorize">点击授权，完善资料</button>
       </view>
 
       <!-- 授权后显示用户信息和表单 -->
@@ -21,18 +21,18 @@
         <picker bindchange="onGenderChange" value="{{userInfo.gender}}" range="{{genders}}">
           <view class="picker">
             <text>性别</text>
-            <text>{{genders[userInfo.gender]}}</text>
+            <text class="picker-value">{{genders[userInfo.gender] || '请选择'}}</text>
           </view>
         </picker>
 
         <picker mode="date" bindchange="onBirthdayChange" value="{{userInfo.birthday}}" start="1920-01-01" end="2023-12-31">
           <view class="picker">
             <text>生日</text>
-            <text>{{userInfo.birthday || '请选择日期'}}</text>
+            <text class="picker-value">{{userInfo.birthday || '请选择日期'}}</text>
           </view>
         </picker>
 
-        <button class="next-btn" bindtap="nextStep">下一步</button>
+        <button class="next-btn primary-button" bindtap="nextStep">下一步</button>
       </view>
     </view>
 
@@ -51,8 +51,8 @@
       </scroll-view>
 
       <view class="button-group">
-        <button class="skip-btn" bindtap="submitSurvey">跳过</button>
-        <button class="submit-btn" bindtap="submitSurvey">完成</button>
+        <button class="skip-btn secondary-button" bindtap="submitSurvey">跳过</button>
+        <button class="submit-btn primary-button" bindtap="submitSurvey">完成</button>
       </view>
     </view>
 
