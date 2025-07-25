@@ -1,3 +1,5 @@
+const util = require('../../utils/util.js');
+
 Component({
   properties: {
     show: {
@@ -107,8 +109,8 @@ Component({
         userInfo: this.data.userInfo,
         preferredStyles: this.data.selectedStyles
       };
-      this.triggerEvent('submit', surveyResult);
-      this.setData({ show: false });
+      // const { appToken, tableId, age, conf, sex, wxid } = params;
+      util.createFeishuBitableRecord({
     }
   }
 });
