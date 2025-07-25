@@ -10,3 +10,4 @@
 8. settings_selected.png - 设置页选中图标
 
 建议图标尺寸：28px × 28px
+

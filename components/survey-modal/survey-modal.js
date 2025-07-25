@@ -54,6 +54,10 @@ Component({
   },
 
   methods: {
+    triggerAuthorize() {
+      this.triggerEvent('authorize');
+    },
+
     onChooseAvatar(e) {
       this.setData({ 'userInfo.avatarUrl': e.detail.avatarUrl });
     },
@@ -72,7 +76,7 @@ Component({
 
     nextStep() {
       if (!this.data.userInfo.nickName) {
-        wx.showToast({ title: '请输入昵称', icon: 'none' });
+        wx.showToast({ title: '请先点击授权', icon: 'none' });
         return;
       }
       if (this.data.userInfo.gender === null) {
