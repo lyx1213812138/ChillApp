@@ -1,4 +1,5 @@
 const util = require('../../utils/util.js');
+const { APP_ID, APP_SECRET, APP_TOKEN, TABLE_ID } = require('../../utils/config.js');
 
 Component({
   properties: {
@@ -105,12 +106,56 @@ Component({
     },
 
     submitSurvey() {
+      const app = getApp();
       const surveyResult = {
         userInfo: this.data.userInfo,
         preferredStyles: this.data.selectedStyles
       };
-      // const { appToken, tableId, age, conf, sex, wxid } = params;
+
+      // --- 数据适配，以匹配 util.js 的要求 ---
+
+      // 1. 计算年龄 (age)
+      let age = null;
+      const birthdayStr = this.data.userInfo.birthday;
+      if (birthdayStr) {
+        const birthDate = new Date(birthdayStr);
+        const today = new Date();
+        age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+      }
+
+      // 2. 获取性别 (sex)
+      const sex = this.data.genders[this.data.userInfo.gender];
+
+      // 3. 将偏好风格转换成纯文本字符串 (conf)
+      const conf = this.data.displayStyles
+        .filter(style => style.selected)
+        .map(style => style.name)
+        .join(', '); // 例如: "清新自然, 复古胶片"
+
+      // 4. 获取用户唯一标识 (wxid) - 暂时使用昵称作为替代，后续应替换为真实wxid
+      const wxid = this.data.userInfo.nickName || `user_${Date.now()}`;
+
+      // --- 调用封装好的飞书上传方法 ---
       util.createFeishuBitableRecord({
+        // 直接从 config.js 导入常量，不再依赖 getApp()
+        appId: APP_ID,
+        appSecret: APP_SECRET,
+        appToken: APP_TOKEN,
+        tableId: TABLE_ID,
+        // 以下是飞书表格需要的字段
+        age: age,
+        sex: sex,
+        conf: conf,
+        wxid: wxid
+      });
+
+      // 触发父组件的事件并关闭弹窗
+      this.triggerEvent('submit', surveyResult);
+      this.setData({ show: false });
     }
   }
 });

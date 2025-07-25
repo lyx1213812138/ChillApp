@@ -14,10 +14,11 @@
 
 .modal-container {
   width: 85%;
-  background-color: #fff;
-  border-radius: 20rpx;
-  padding: 40rpx;
+  background-color: var(--background-color-base);
+  border-radius: 16px;
+  padding: 24px;
   box-sizing: border-box;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .survey-step {
@@ -26,17 +27,18 @@
 }
 
 .step-title {
-  font-size: 36rpx;
-  font-weight: bold;
+  font-size: 18px;
+  font-weight: 600;
   text-align: center;
-  margin-bottom: 10rpx;
+  margin-bottom: 8px;
+  color: var(--text-color-primary);
 }
 
 .step-subtitle {
-  font-size: 28rpx;
-  color: #888;
+  font-size: 14px;
+  color: var(--text-color-secondary);
   text-align: center;
-  margin-bottom: 40rpx;
+  margin-bottom: 24px;
 }
 
 /* --- 第一页 --- */
@@ -44,33 +46,39 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 30rpx;
+  margin-bottom: 16px;
 }
 
 .avatar {
-  width: 160rpx;
-  height: 160rpx;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  margin-bottom: 20rpx;
-  background-color: #eee;
+  margin-bottom: 12px;
+  background-color: var(--background-color-alt);
 }
 
 .nickname {
-  font-size: 32rpx;
-  font-weight: bold;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-color-primary);
 }
 
 .picker {
   display: flex;
   justify-content: space-between;
-  padding: 30rpx 0;
-  border-bottom: 1rpx solid #eee;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 16px;
 }
 
-.next-btn {
-  background-color: #07c160;
-  color: #fff;
-  margin-top: 40rpx;
+.picker-value {
+  color: var(--text-color-secondary);
+}
+
+.next-btn, .auth-btn {
+  width: 100%;
+  margin-top: 24px;
 }
 
 /* --- 第二页 --- */
@@ -78,21 +86,23 @@
   width: 100%;
   height: 35vw; /* 关键：为 scroll-view 设置明确的高度 */
   white-space: nowrap;
-  margin-bottom: 40rpx;
+  margin-bottom: 24px;
 }
 
 .style-grid {
   display: inline-flex; /* 关键：让 grid 成为行内块元素，以便在 scroll-view 中横向排列 */
-  gap: 20rpx;
+  gap: 10px;
 }
 
 .style-item {
   position: relative;
   width: 25vw; /* 调整宽度 */
   height: 35vw; /* 调整高度 */
-  border-radius: 10rpx;
+  border-radius: 8px;
   overflow: hidden;
-  background-color: #eee; /* 添加背景色，以便在图片加载失败时也能看到容器 */
+  background-color: var(--background-color-alt);
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
 }
 
 .style-image {
@@ -101,28 +111,33 @@
   object-fit: cover; /* 保证图片等比填充 */
 }
 
+.style-item.selected {
+  border-color: var(--primary-color);
+}
+
 .style-item.selected .selected-icon {
   display: flex;
 }
 
 .selected-icon {
   position: absolute;
-  top: 10rpx;
-  right: 10rpx;
-  width: 40rpx;
-  height: 40rpx;
-  background-color: #07c160;
-  color: #fff;
+  top: 5px;
+  right: 5px;
+  width: 22px;
+  height: 22px;
+  background-color: var(--primary-color);
+  color: var(--button-primary-text);
   border-radius: 50%;
   display: none;
   justify-content: center;
   align-items: center;
-  font-size: 28rpx;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .button-group {
   display: flex;
-  gap: 20rpx;
+  gap: 12px;
 }
 
 .skip-btn,
@@ -130,11 +145,4 @@
   flex: 1;
 }
 
-.skip-btn {
-  background-color: #f0f0f0;
-}
-
-.submit-btn {
-  background-color: #07c160;
-  color: #fff;
-}
+/* 移除特定按钮样式，因为已在 app.wxss 中定义了 .primary-button 和 .secondary-button */

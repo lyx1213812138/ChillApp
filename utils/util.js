@@ -162,6 +162,7 @@ function searchFeishuBitableRecords(params) {
 function createFeishuBitableRecord(params) {
   return new Promise(async (resolve, reject) => {
     const { appToken, tableId, age, conf, sex, wxid } = params;
+    console.log(params);
     const accessToken = await requestFeishuAccessToken({ appId: params.appId, appSecret: params.appSecret });
     wx.request({
       url: `https://open.feishu.cn/open-apis/bitable/v1/apps/${appToken}/tables/${tableId}/records`,

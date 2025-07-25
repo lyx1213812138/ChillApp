@@ -236,44 +236,14 @@ Page({
   onSurveySubmit(e) {
     const surveyResult = e.detail;
     console.log('问卷结果:', surveyResult);
-
-    // 上传到云端
-    this.uploadDataToServer(surveyResult);
+    // 数据上传逻辑已移至 survey-modal.js 组件内部处理
+    // 因此此处不再需要调用 uploadDataToServer
+    wx.setStorageSync('surveyCompleted', true);
+    this.setData({ showSurvey: false });
+    wx.showToast({ title: '感谢您的反馈！', icon: 'success' });
   },
 
-  uploadDataToServer(data) {
-    const that = this;
-    wx.showLoading({ title: '正在保存... ', mask: true });
-
-    // 伪代码：你需要替换成你真实的云端API地址
-    const apiUrl = 'https://your-api.com/submit-survey';
-
-    wx.request({
-      url: apiUrl,
-      method: 'POST',
-      data: data,
-      success(res) {
-        if (res.statusCode === 200) {
-          console.log('数据上传成功:', res.data);
-          // 只有上传成功后，才标记问卷已完成
-          wx.setStorageSync('surveyResult', data);
-          wx.setStorageSync('surveyCompleted', true);
-          that.setData({ showSurvey: false });
-          wx.showToast({ title: '感谢您的反馈！', icon: 'success' });
-        } else {
-          // 处理服务器错误
-          wx.showToast({ title: '保存失败，请稍后重试', icon: 'none' });
-        }
-      },
-      fail(err) {
-        console.error('数据上传失败:', err);
-        wx.showToast({ title: '网络错误，请稍后重试', icon: 'none' });
-      },
-      complete() {
-        wx.hideLoading();
-      }
-    });
-  },
+  
 
   // 将消息转换为Buffer
   frameToBuffer(message) {
