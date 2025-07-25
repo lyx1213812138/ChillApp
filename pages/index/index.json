@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "BeautyCap",
+  "navigationBarBackgroundColor": "#000000",
+  "navigationStyle": "custom",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#000000",
+  "disableScroll": true,
+  "usingComponents": {
+    "survey-modal": "/components/survey-modal/survey-modal"
+  }
+}

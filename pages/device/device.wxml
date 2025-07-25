@@ -1,0 +1,141 @@
+<!-- pages/device/device.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">设备连接</text>
+  </view>
+  
+  <!-- 已连接设备信息 -->
+  <view class="device-status" wx:if="{{connected && currentDevice}}">
+    <view class="status-header">
+      <view class="status-title">
+        <text class="device-name">{{currentDevice.name}}</text>
+        <text class="device-type">{{currentDevice.deviceType}}</text>
+      </view>
+      <view class="status-indicator connected">已连接</view>
+    </view>
+    
+    <view class="status-details">
+      <view class="status-item">
+        <view class="status-label">电池电量</view>
+        <view class="battery-status">
+          <view class="battery-outer">
+            <view class="battery-inner" style="width:{{batteryLevel+'%'}}"></view>
+          </view>
+          <text class="battery-text">{{batteryLevel}}%</text>
+        </view>
+      </view>
+      
+      <view class="status-item">
+        <view class="status-label">存储空间</view>
+        <view class="storage-status">
+          <view class="storage-bar">
+            <view class="storage-used" style="width:{{storageInfo.used / storageInfo.total * 100}}%"></view>
+          </view>
+          <view class="storage-text">
+            <text>已用 {{formatStorage(storageInfo.used)}}</text>
+            <text>可用 {{formatStorage(storageInfo.free)}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <button class="disconnect-btn" bindtap="disconnectDevice">断开连接</button>
+  </view>
+  
+  <!-- 设备扫描区域 -->
+  <view class="scan-section" wx:if="{{!connected}}">
+    <view class="scan-header">
+      <text class="scan-title">可用设备</text>
+      <view class="scan-actions">
+        <button class="scan-btn {{scanning ? 'scanning' : ''}}" bindtap="{{scanning ? 'stopScan' : 'startScan'}}">
+          {{scanning ? '停止扫描' : '扫描设备'}}
+        </button>
+      </view>
+    </view>
+    
+    <view class="device-list" wx:if="{{devices.length > 0}}">
+      <block wx:for="{{devices}}" wx:key="deviceId">
+        <view class="device-item" bindtap="connectDevice" data-id="{{item.deviceId}}">
+          <view class="device-info">
+            <text class="device-name">{{item.name}}</text>
+            <text class="device-type">{{item.deviceType}}</text>
+          </view>
+          <view class="device-signal">
+            <view class="signal-strength" style="opacity: {{(item.RSSI + 100) / 50}}"></view>
+            <view class="signal-strength" style="opacity: {{(item.RSSI + 90) / 50}}"></view>
+            <view class="signal-strength" style="opacity: {{(item.RSSI + 80) / 50}}"></view>
+          </view>
+        </view>
+      </block>
+    </view>
+    
+    <view class="empty-devices" wx:elif="{{!scanning}}">
+      <image class="empty-icon" src="/assets/icons/no-device.png" mode="aspectFit"></image>
+      <text class="empty-text">未发现设备</text>
+      <text class="empty-subtext">请点击"扫描设备"按钮搜索附近的设备</text>
+    </view>
+    
+    <view class="scanning-animation" wx:elif="{{scanning}}">
+      <view class="scanning-circle"></view>
+      <view class="scanning-circle delay-1"></view>
+      <view class="scanning-circle delay-2"></view>
+      <text class="scanning-text">正在扫描附近设备...</text>
+    </view>
+  </view>
+  
+  <!-- 使用指南 -->
+  <view class="guide-section">
+    <view class="guide-header">
+      <text class="guide-title">连接指南</text>
+    </view>
+    
+    <view class="guide-steps">
+      <view class="guide-step">
+        <view class="step-number">1</view>
+        <view class="step-content">
+          <text class="step-title">打开设备电源</text>
+          <text class="step-desc">长按设备电源键3秒，直到指示灯亮起</text>
+        </view>
+      </view>
+      
+      <view class="guide-step">
+        <view class="step-number">2</view>
+        <view class="step-content">
+          <text class="step-title">开启蓝牙</text>
+          <text class="step-desc">确保手机蓝牙已开启并允许小程序使用</text>
+        </view>
+      </view>
+      
+      <view class="guide-step">
+        <view class="step-number">3</view>
+        <view class="step-content">
+          <text class="step-title">扫描并连接</text>
+          <text class="step-desc">点击"扫描设备"按钮，在列表中选择您的设备</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 连接弹窗 -->
+<view class="connect-modal {{showConnectModal ? 'show' : ''}}">
+  <view class="modal-mask"></view>
+  <view class="modal-content">
+    <view class="modal-body">
+      <view class="connecting-animation" wx:if="{{!errorMessage}}">
+        <view class="connecting-spinner"></view>
+        <text class="connecting-text">正在连接设备...</text>
+      </view>
+      
+      <view class="connect-error" wx:else>
+        <icon type="warn" size="64" color="#ff4d4f"></icon>
+        <text class="error-text">{{errorMessage}}</text>
+        <button class="retry-btn" bindtap="retryConnect">重试</button>
+      </view>
+    </view>
+    
+    <view class="modal-footer">
+      <button class="cancel-btn" bindtap="closeConnectModal">取消</button>
+    </view>
+  </view>
+</view>

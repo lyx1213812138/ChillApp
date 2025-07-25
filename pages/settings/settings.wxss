@@ -1,0 +1,210 @@
+/* 极简浅色设置页样式 */
+.settings-bg {
+  height: 100vh;
+  background: #f7f8fa;
+  padding: 0 0 32px 0;
+  box-sizing: border-box;
+}
+
+.card {
+  background: #fff;
+  border-radius: 18px;
+  margin: 18px 18px 0 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  padding: 0 0 0 0;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  padding: 22px 18px;
+  margin-top: 48px;
+  cursor: pointer;
+}
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 16px;
+  overflow: hidden; /* 确保图片超出部分被裁剪 */
+}
+.avatar image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 关键：等比例缩放并填充，不变形 */
+}
+.user-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.nickname {
+  color: #222;
+  font-size: 18px;
+  font-weight: 500;
+}
+.user-id {
+  color: #888;
+  font-size: 13px;
+  margin-top: 2px;
+}
+.arrow-icon {
+  width: 18px;
+  height: 18px;
+  margin-left: 8px;
+  opacity: 0.5;
+}
+
+.card-title {
+  color: #222;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 18px 18px 0 18px;
+}
+
+.device-list {
+  padding: 0 0 0 0;
+}
+.device-item {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px 14px 18px;
+  border-bottom: 1px solid #f2f2f2;
+}
+.device-item:last-child {
+  border-bottom: none;
+}
+.device-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 14px;
+  border-radius: 8px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.device-icon image {
+  width: 70%;
+  height: 70%;
+  display: block;
+  margin: 0 auto;
+}
+.device-info {
+  flex: 1;
+}
+.device-name {
+  color: #222;
+  font-size: 16px;
+}
+.device-status {
+  font-size: 12px;
+  margin-top: 2px;
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: #f2f2f2;
+  color: #888;
+}
+.device-status.connected {
+  color: #07c160;
+  background: rgba(7,193,96,0.08);
+}
+.device-status.disconnected {
+  color: #bbb;
+}
+.add-device {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px;
+  color: #07c160;
+  font-size: 15px;
+  cursor: pointer;
+}
+.add-icon {
+  margin-right: 8px;
+  font-weight: 500;
+  font-size: 20px;
+}
+.add-text {
+  font-size: 15px;
+}
+
+.perm-card, .conn-card {
+  margin-top: 18px;
+  padding-bottom: 8px;
+}
+.perm-list, .conn-list {
+  padding: 0;
+}
+.perm-item, .conn-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid #f2f2f2;
+}
+.perm-item:last-child, .conn-item:last-child {
+  border-bottom: none;
+}
+.perm-item text, .conn-item text {
+  color: #222;
+  font-size: 15px;
+}
+
+switch {
+  transform: scale(0.85);
+  transform-origin: right center;
+}
+
+.bottom-card {
+  margin-top: 18px;
+  margin-bottom: 0;
+  padding-bottom: 8px;
+}
+.bottom-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-bottom: 1px solid #f2f2f2;
+}
+.bottom-item:last-child {
+  border-bottom: none;
+}
+.bottom-item text {
+  color: #222;
+  font-size: 15px;
+}
+.version-info {
+  color: #888;
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+.safe-top {
+  padding-top: env(safe-area-inset-top, 24px);
+}
+.settings-header {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: flex-end;
+  padding-left: 20px;
+  box-sizing: border-box;
+  background: #f7f8fa;
+  padding-top: env(safe-area-inset-top, 20px);
+}
+.settings-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #222;
+  letter-spacing: 1px;
+  margin-top: 10px;
+  margin-bottom: 8px;
+}
+.user-card.safe-top {
+  margin-top: calc(env(safe-area-inset-top, 20px) + 12px);
+  padding-top: 24px;
+}

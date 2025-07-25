@@ -1,0 +1,36 @@
+<!-- index.wxml -->
+<view class="container">
+  <!-- 相机预览模块 -->
+  <view class="camera-container">
+    <camera device-position="back" flash="auto" binderror="onCameraError" style="width: 100%; height: 100%;" frame-size="medium"></camera>
+  </view>
+
+  <!-- AI对话和控制模块 -->
+  <view class="bottom-container">
+    <!-- 聊天消息区域 -->
+    <scroll-view scroll-y="true" class="message-list" scroll-into-view="{{'msg-' + (messages.length - 1)}}">
+      <block wx:for="{{messages}}" wx:key="id">
+        <view id="{{'msg-' + index}}" class="message-item {{item.sender === 'ai' ? 'ai-message' : 'user-message'}}">
+          <view class="bubble">
+            <text class="message-text">{{item.content}}</text>
+          </view>
+        </view>
+      </block>
+    </scroll-view>
+
+    <!-- 控制按钮 -->
+    <view class="controls-wrapper">
+      <!-- 录音按钮 -->
+      <view class="record-button {{isButtonPressed ? 'active' : ''}} {{isRecording ? 'recording' : ''}}" bindtouchstart="startRecording" bindtouchend="stopRecording">
+        <image class="mic-icon" src="/assets/icons/mic.png" />
+      </view>
+
+      <!-- 拍照按钮 -->
+      <view class="capture-button" bindtap="takePhoto">
+        <image class="camera-icon" src="/assets/icons/camera.png" />
+      </view>
+    </view>
+  </view>
+</view>
+
+<survey-modal show="{{showSurvey}}" bind:submit="onSurveySubmit"></survey-modal>

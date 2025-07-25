@@ -1,0 +1,26 @@
+# 微信小程序项目忽略文件
+
+# 本地项目配置
+project.private.config.json
+project.config.json
+.env
+*.local.*
+
+# node.js 依赖
+node_modules/
+
+# 编译产物
+miniprogram_npm/
+dist/
+build/
+
+# 临时文件和日志
+*.log
+.DS_Store
+
+# IDE/编辑器配置
+.idea/
+.vscode/launch.json
+
+# 上传时不要包含 git 仓库自身的隐藏目录（如果你复制了一整个文件夹）
+.git/

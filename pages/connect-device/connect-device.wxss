@@ -1,0 +1,49 @@
+.connect-bg {
+  min-height: 100vh;
+  background: #f7f8fa;
+  padding: 0 0 32px 0;
+}
+.connect-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #222;
+  text-align: center;
+  margin-top: 48px;
+  margin-bottom: 32px;
+}
+.connect-content {
+  background: #fff;
+  border-radius: 18px;
+  margin: 0 18px;
+  padding: 32px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.connect-content text {
+  color: #222;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+.connect-placeholder {
+  color: #888;
+  font-size: 14px;
+  margin-top: 8px;
+}
+.connect-back {
+  position: absolute;
+  top: 18px;
+  left: 12px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  background: rgba(255,255,255,0.7);
+  border-radius: 18px;
+}
+.back-icon {
+  width: 20px;
+  height: 20px;
+} 

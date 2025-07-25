@@ -1,0 +1,120 @@
+/* index.wxss */
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #000;
+}
+
+.camera-container {
+  flex: 1;
+  width: 100%;
+}
+
+.bottom-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 30rpx;
+  padding-bottom: 220rpx; /* 增加底部内边距以容纳按钮 */
+  border-top-left-radius: 30rpx;
+  border-top-right-radius: 30rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 50vh; /* 限制最大高度 */
+}
+
+.message-list {
+  width: 100%;
+  flex: 1;
+  margin-bottom: 20rpx;
+}
+
+.message-item {
+  display: flex;
+  margin-bottom: 20rpx;
+}
+
+.ai-message {
+  justify-content: flex-start;
+}
+
+.user-message {
+  justify-content: flex-end;
+}
+
+.bubble {
+  max-width: 80%;
+  padding: 20rpx;
+  border-radius: 20rpx;
+  line-height: 1.5;
+}
+
+.ai-message .bubble {
+  background-color: #333;
+  color: #fff;
+}
+
+.user-message .bubble {
+  background-color: #07c160;
+  color: #fff;
+}
+
+.message-text {
+  font-size: 28rpx;
+  word-break: break-all;
+}
+
+.controls-wrapper {
+  position: absolute;
+  bottom: 40rpx;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.record-button {
+  width: 150rpx;
+  height: 150rpx;
+  border-radius: 50%;
+  background-color: #07c160;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 20rpx rgba(7, 193, 96, 0.6);
+  transition: transform 0.1s ease;
+}
+
+.record-button.active {
+  transform: scale(0.9);
+}
+
+.record-button.recording {
+  background-color: #059c4a; /* 录音中时颜色变深 */
+}
+
+.mic-icon {
+  width: 80rpx;
+  height: 80rpx;
+}
+
+.capture-button {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 6rpx solid rgba(255, 255, 255, 0.8);
+}
+
+.camera-icon {
+  width: 60rpx;
+  height: 60rpx;
+}

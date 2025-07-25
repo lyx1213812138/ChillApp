@@ -1,0 +1,55 @@
+<!-- survey-modal.wxml -->
+<view class="modal-mask" wx:if="{{show}}">
+  <view class="modal-container">
+    <!-- 问卷第一页：基本信息 -->
+    <view class="survey-step" wx:if="{{step === 1}}">
+      <view class="step-title">完善你的个人资料</view>
+      <view class="step-subtitle">让我们更好地为你推荐风格</view>
+
+      <view class="form-group">
+        <view class="avatar-container">
+          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
+          <button class="avatar-button" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar"></button>
+        </view>
+        <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:input="onNicknameInput"/>
+      </view>
+
+      <picker bindchange="onGenderChange" value="{{userInfo.gender}}" range="{{genders}}">
+        <view class="picker">
+          <text>性别</text>
+          <text>{{genders[userInfo.gender]}}</text>
+        </view>
+      </picker>
+
+      <picker mode="date" bindchange="onBirthdayChange" value="{{userInfo.birthday}}" start="1920-01-01" end="2023-12-31">
+        <view class="picker">
+          <text>生日</text>
+          <text>{{userInfo.birthday || '请选择日期'}}</text>
+        </view>
+      </picker>
+
+      <button class="next-btn" bindtap="nextStep">下一步</button>
+    </view>
+
+    <!-- 问卷第二页：拍照偏好 -->
+    <view class="survey-step" wx:if="{{step === 2}}">
+      <view class="step-title">选择你喜欢的照片风格</view>
+      <view class="step-subtitle">（可多选，或跳过）</view>
+
+      <scroll-view scroll-x="true" class="style-scroll-view">
+        <view class="style-grid">
+          <view class="style-item {{item.selected ? 'selected' : ''}}" wx:for="{{displayStyles}}" wx:key="id" catchtap="selectStyle" data-id="{{item.id}}">
+            <image class="style-image" src="{{item.src}}" mode="aspectFill"></image>
+            <view class="selected-icon">✓</view>
+          </view>
+        </view>
+      </scroll-view>
+
+      <view class="button-group">
+        <button class="skip-btn" bindtap="submitSurvey">跳过</button>
+        <button class="submit-btn" bindtap="submitSurvey">完成</button>
+      </view>
+    </view>
+
+  </view>
+</view>

@@ -1,0 +1,457 @@
+/* pages/device/device.wxss */
+.container {
+  padding: 30rpx;
+  background-color: #f8f8f8;
+  min-height: 100vh;
+}
+
+.header {
+  margin-bottom: 30rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 已连接设备样式 */
+.device-status {
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.status-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.device-name {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 6rpx;
+}
+
+.device-type {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.status-indicator {
+  font-size: 24rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.status-indicator.connected {
+  background-color: #f0fff0;
+  color: #3cc51f;
+}
+
+.status-details {
+  margin-bottom: 30rpx;
+}
+
+.status-item {
+  margin-bottom: 20rpx;
+}
+
+.status-label {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+
+/* 电池样式 */
+.battery-status {
+  display: flex;
+  align-items: center;
+}
+
+.battery-outer {
+  width: 200rpx;
+  height: 30rpx;
+  border: 2rpx solid #ccc;
+  border-radius: 15rpx;
+  overflow: hidden;
+  margin-right: 20rpx;
+}
+
+.battery-inner {
+  height: 100%;
+  background-color: #3cc51f;
+  border-radius: 15rpx;
+  transition: width 0.3s ease;
+}
+
+.battery-text {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 存储空间样式 */
+.storage-status {
+  margin-top: 10rpx;
+}
+
+.storage-bar {
+  height: 20rpx;
+  background-color: #f0f0f0;
+  border-radius: 10rpx;
+  overflow: hidden;
+  margin-bottom: 10rpx;
+}
+
+.storage-used {
+  height: 100%;
+  background-color: #3cc51f;
+  border-radius: 10rpx;
+  transition: width 0.3s ease;
+}
+
+.storage-text {
+  display: flex;
+  justify-content: space-between;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.disconnect-btn {
+  width: 100%;
+  background-color: #fff;
+  color: #ff4d4f;
+  border: 1rpx solid #ff4d4f;
+  font-size: 28rpx;
+  margin-top: 20rpx;
+}
+
+/* 扫描区域样式 */
+.scan-section {
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.scan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.scan-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.scan-btn {
+  font-size: 26rpx;
+  padding: 10rpx 30rpx;
+  background-color: #3cc51f;
+  color: #fff;
+  border-radius: 30rpx;
+  margin: 0;
+}
+
+.scan-btn.scanning {
+  background-color: #ff4d4f;
+}
+
+/* 设备列表样式 */
+.device-list {
+  margin-top: 20rpx;
+}
+
+.device-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.device-item:last-child {
+  border-bottom: none;
+}
+
+.device-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.device-signal {
+  display: flex;
+  align-items: flex-end;
+}
+
+.signal-strength {
+  width: 8rpx;
+  background-color: #3cc51f;
+  margin-right: 4rpx;
+}
+
+.signal-strength:nth-child(1) {
+  height: 10rpx;
+}
+
+.signal-strength:nth-child(2) {
+  height: 16rpx;
+}
+
+.signal-strength:nth-child(3) {
+  height: 22rpx;
+}
+
+/* 空设备列表样式 */
+.empty-devices {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 0;
+}
+
+.empty-icon {
+  width: 120rpx;
+  height: 120rpx;
+  margin-bottom: 20rpx;
+  opacity: 0.5;
+}
+
+.empty-text {
+  font-size: 30rpx;
+  color: #999;
+  margin-bottom: 10rpx;
+}
+
+.empty-subtext {
+  font-size: 26rpx;
+  color: #bbb;
+  text-align: center;
+}
+
+/* 扫描动画 */
+.scanning-animation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 0;
+  position: relative;
+}
+
+.scanning-circle {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 4rpx solid rgba(60, 197, 31, 0.3);
+  position: absolute;
+  top: 60rpx;
+  animation: scan-pulse 2s infinite;
+}
+
+.scanning-circle.delay-1 {
+  animation-delay: 0.6s;
+}
+
+.scanning-circle.delay-2 {
+  animation-delay: 1.2s;
+}
+
+@keyframes scan-pulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.scanning-text {
+  margin-top: 160rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+/* 使用指南样式 */
+.guide-section {
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.guide-header {
+  margin-bottom: 20rpx;
+}
+
+.guide-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.guide-steps {
+  margin-top: 20rpx;
+}
+
+.guide-step {
+  display: flex;
+  margin-bottom: 30rpx;
+}
+
+.guide-step:last-child {
+  margin-bottom: 0;
+}
+
+.step-number {
+  width: 50rpx;
+  height: 50rpx;
+  background-color: #3cc51f;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28rpx;
+  font-weight: bold;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 6rpx;
+}
+
+.step-desc {
+  display: block;
+  font-size: 26rpx;
+  color: #999;
+  line-height: 1.4;
+}
+
+/* 连接弹窗样式 */
+.connect-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.connect-modal.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  background-color: #fff;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+
+.modal-body {
+  padding: 60rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.connecting-animation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.connecting-spinner {
+  width: 80rpx;
+  height: 80rpx;
+  border: 6rpx solid #f3f3f3;
+  border-top: 6rpx solid #3cc51f;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 30rpx;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.connecting-text {
+  font-size: 30rpx;
+  color: #666;
+}
+
+.connect-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.error-text {
+  font-size: 30rpx;
+  color: #ff4d4f;
+  margin: 20rpx 0 30rpx;
+  text-align: center;
+}
+
+.retry-btn {
+  font-size: 28rpx;
+  padding: 10rpx 60rpx;
+  background-color: #3cc51f;
+  color: #fff;
+  border-radius: 30rpx;
+}
+
+.modal-footer {
+  border-top: 1rpx solid #f0f0f0;
+  padding: 20rpx;
+}
+
+.cancel-btn {
+  font-size: 28rpx;
+  background-color: #f5f5f5;
+  color: #666;
+  border-radius: 30rpx;
+}

@@ -1,0 +1,10 @@
+<view class="connect-bg">
+  <view class="connect-back" bindtap="goBack">
+    <image class="back-icon" src="/assets/icons/arrow-right.png" style="transform:rotate(180deg);" />
+  </view>
+  <view class="connect-title">连接设备</view>
+  <view class="connect-content">
+    <text>请选择设备连接方式</text>
+    <view class="connect-placeholder">（此处后续接入WiFi/蓝牙/扫码等方式）</view>
+  </view>
+</view> 
