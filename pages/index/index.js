@@ -1,9 +1,6 @@
-// index.js
 
-// 伪代码：需要一个 util.js 文件来提供 getUserConf
-// const util = require('../../utils/util.js');
+const util = require('../../utils/util.js');
 
-// 伪代码：需要定义消息类型
 const Type = {
   audioFrame: 'audioFrame'
 };
@@ -29,11 +26,6 @@ Page({
     this.checkSurveyStatus();
   },
 
-  onReady() {
-    // onReady 中才能获取 camera context
-    this.initCameraFrameListener();
-  },
-
   // 初始化录音事件监听
   initRecordEvents() {
     const that = this;
@@ -41,6 +33,20 @@ Page({
     this.recorderManager.onStart(() => {
       console.log('录音已正式开始');
       that.setData({ isRecording: true });
+      if (that.data.socketOpen) {
+        wx.sendSocketMessage({
+          data: JSON.stringify({
+            devType: 'WX',
+            cmd: 'StartAudioUp',
+          }),
+          success: () => {
+            console.log('开始标志发送成功');
+          },
+          fail: (err) => {
+            console.error('开始标志发送失败:', err);
+          }
+        });
+      }
     });
 
     this.recorderManager.onError((err) => {
@@ -53,16 +59,17 @@ Page({
     });
 
     this.recorderManager.onFrameRecorded((res) => {
-      const { frameBuffer, isLastFrame } = res;
+      const { frameBuffer } = res;
       if (that.data.socketOpen) {
-        const message = {
-          type: Type.audioFrame,
+        wx.sendSocketMessage({
           data: frameBuffer,
-          isLastFrame: isLastFrame,
-          timestamp: Date.now()
-        };
-        console.log("onFrameRecorded",res)
-
+          success: () => {
+            console.log('音频帧发送成功');
+          },
+          fail: (err) => {
+            console.error('音频帧发送失败:', err);
+          }
+        });
         // wx.sendSocketMessage(...); // 暂时禁用上传
       }
     });
@@ -70,6 +77,20 @@ Page({
     this.recorderManager.onStop(() => {
       console.log('录音已结束');
       that.setData({ isRecording: false, isButtonPressed: false });
+      if (that.data.socketOpen) {
+        wx.sendSocketMessage({
+          data: JSON.stringify({
+            devType: 'WX',
+            cmd: 'StopAudioUp',
+          }),
+          success: () => {
+            console.log('结束标志发送成功');
+          },
+          fail: (err) => {
+            console.error('结束标志发送失败:', err);
+          }
+        });
+      }
     });
   },
 
@@ -134,37 +155,6 @@ Page({
     this.recorderManager.stop();
   },
 
-  initCameraFrameListener() {
-    const that = this;
-    const cameraContext = wx.createCameraContext();
-    let lastUploadTime = 0;
-    const uploadInterval = 100; // 100ms, 对应 10fps
-
-    const listener = cameraContext.onCameraFrame((frame) => {
-      const now = Date.now();
-      if (now - lastUploadTime < uploadInterval) {
-        return; // 未达到上传时间间隔，丢弃此帧
-      }
-      lastUploadTime = now;
-
-      // 在这里处理帧数据，例如上传到云端
-      console.log(`[Camera Frame] 模拟上传帧数据，尺寸: ${frame.width}x${frame.height}`);
-      
-      // 伪代码：上传逻辑
-      // const frameData = new Uint8Array(frame.data); // 帧数据是 ArrayBuffer，需要转换
-      // wx.request({
-      //   url: 'YOUR_UPLOAD_URL',
-      //   method: 'POST',
-      //   data: frameData.buffer,
-      //   // ...其他参数
-      // });
-    });
-
-    // 启动监听
-    listener.start();
-    console.log('[Camera Frame] 摄像头帧数据监听已启动');
-  },
-
   checkSurveyStatus() {
     const surveyCompleted = wx.getStorageSync('surveyCompleted');
     if (!surveyCompleted) {
@@ -191,6 +181,8 @@ Page({
 
   // 拍照
   takePhoto() {
+    console.log('takePhoto')
+    this.data.canPostImage = true;
     const ctx = wx.createCameraContext();
     ctx.takePhoto({
       quality: 'high',
@@ -207,5 +199,24 @@ Page({
         });
       }
     });
-  }
+  },
+
+  // camera
+  //bindstop="onCameraStop"
+  // binderror="onCameraError"
+  // bindinitdone="onCameraInit"
+  onCameraInit() {
+    this.cameraListner = util.startPostImage.call(this);
+    this.data.canPostImage = true;
+    console.log('Camera initialized');
+  },
+
+  onCameraStop() {
+    util.stopPostImage(this.cameraListner);
+    // clearInterval(this.postImageInterval);
+    this.data.canPostImage = false;
+    this.cameraListner = null;
+    console.log('Camera stopped');
+  },
+  
 });

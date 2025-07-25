@@ -1,2 +1,7 @@
 // app.js
-App({})
+const websocket = require('./utils/webSocket.js');
+App({
+  onLaunch() {
+    websocket.connectWebSocket(this);
+  },
+})

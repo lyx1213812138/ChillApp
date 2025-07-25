@@ -2,7 +2,17 @@
 <view class="container">
   <!-- 相机预览模块 -->
   <view class="camera-container">
-    <camera device-position="back" flash="auto" binderror="onCameraError" style="width: 100%; height: 100%;" frame-size="medium"></camera>
+    <camera 
+      device-position="back" 
+      flash="auto" 
+      binderror="onCameraError" 
+      style="width: 100%; height: 100%;" frame-size="medium"
+      resolution="low"
+      frame-size="small"
+      bindstop="onCameraStop"
+      binderror="onCameraError"
+      bindinitdone="onCameraInit"
+    ></camera>
   </view>
 
   <!-- AI对话和控制模块 -->
