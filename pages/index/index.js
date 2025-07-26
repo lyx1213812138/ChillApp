@@ -43,13 +43,7 @@ Page({
       }
     };
 
-    // 检查是否已授权，决定显示主内容还是授权弹窗
-    const userInfo = wx.getStorageSync('userInfo');
-    if (userInfo) {
-      this.checkSurveyStatus(); // 如果已授权，则检查是否需要填问卷
-    } else {
-      this.setData({ showAuthModal: true }); // 未授权，显示授权弹窗
-    }
+    
 
     // 定义一个专门用来处理 agentTip 更新的函数，并绑定 this
     this.agentTipUpdateHandler = (newTip) => {
@@ -82,6 +76,12 @@ Page({
   },
 
   onShow() {
+    if (getApp().globalData.needsSurvey) {
+      this.setData({ showSurvey: true });
+      // 重置标志，以免每次 onShow 都触发
+      getApp().globalData.needsSurvey = false;
+    }
+
     // 页面显示时，注册对 agentTip 的监听
     getApp().registerAgentTipListener(this.agentTipUpdateHandler);
     // 页面显示时，立即用全局数据刷新一次，以防错过离线时的更新
@@ -237,11 +237,17 @@ Page({
   onSurveySubmit(e) {
     const surveyResult = e.detail;
     console.log('问卷结果:', surveyResult);
-    // 数据上传逻辑已移至 survey-modal.js 组件内部处理
-    // 因此此处不再需要调用 uploadDataToServer
-    wx.setStorageSync('surveyCompleted', true);
+
     this.setData({ showSurvey: false });
-    wx.showToast({ title: '感谢您的反馈！', icon: 'success' });
+
+    // 跳转到链接上传页面，并通过 eventChannel 传递数据
+    wx.navigateTo({
+      url: '/pages/link-upload/link-upload',
+      success: (res) => {
+        // 通过eventChannel向被打开页面传送数据
+        res.eventChannel.emit('acceptSurveyResult', { surveyResult: surveyResult })
+      }
+    });
   },
 
   

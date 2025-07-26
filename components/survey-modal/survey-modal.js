@@ -25,15 +25,14 @@ Component({
   data: {
     step: 1, // 1: 基本信息, 2: 拍照偏好
     userInfo: {
-      avatarUrl: '/assets/icons/user.png', // 默认头像
+      avatarUrl: '', // 初始值设为空
       nickName: '',
       gender: null, // 初始值设为 null，表示未选择
       birthday: ''
     },
     genders: ['男', '女'],
-    displayStyles: [], // 新增：用于渲染的图片数组
-    // 样式定义已移至 style_config.js
-    maleImageStyles: maleImageStyles.map(s => ({...s})), // 浅拷贝一份，避免组件间互相影响
+    displayStyles: [],
+    maleImageStyles: maleImageStyles.map(s => ({...s})),
     femaleImageStyles: femaleImageStyles.map(s => ({...s})),
     selectedStyles: []
   },
@@ -56,14 +55,8 @@ Component({
     },
 
     nextStep() {
-      if (!this.data.userInfo.nickName) {
-        wx.showToast({ title: '请先点击授权', icon: 'none' });
-        return;
-      }
-      if (this.data.userInfo.gender === null) {
-        wx.showToast({ title: '请选择性别', icon: 'none' });
-        return;
-      }
+      // 在进入下一步时，将收集到的用户信息存入本地缓存
+      wx.setStorageSync('userInfo', this.data.userInfo);
 
       const stylesToDisplay = this.data.userInfo.gender === 0 ? this.data.maleImageStyles : this.data.femaleImageStyles;
       this.setData({ displayStyles: stylesToDisplay, step: 2 });
@@ -95,17 +88,8 @@ Component({
         }
       };
 
-      // 跳转到链接上传页面，并通过 eventChannel 传递数据
-      wx.navigateTo({
-        url: '/pages/link-upload/link-upload',
-        success: (res) => {
-          // 通过eventChannel向被打开页面传送数据
-          res.eventChannel.emit('acceptSurveyResult', { surveyResult: surveyResult })
-        }
-      });
-
-      // 关闭当前的弹窗
-      this.setData({ show: false });
+      // 触发父组件的 submit 事件，并将结果传递出去
+      this.triggerEvent('submit', surveyResult);
     }
   }
 });

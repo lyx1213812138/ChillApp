@@ -36,6 +36,10 @@ App({
   },
 
   onLaunch() {
+    const surveyCompleted = wx.getStorageSync('surveyCompleted');
+    if (!surveyCompleted) {
+      this.globalData.needsSurvey = true;
+    }
     console.log('App initialized with appid:', this.globalData.appid);
   },
 })
