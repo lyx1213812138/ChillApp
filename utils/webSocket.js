@@ -14,7 +14,7 @@ function connectWebSocket(that) {
   that.socketOpen = false;
   that.globalData.isPlaying = false;
   wx.connectSocket({
-    url: 'ws://192.168.150.11:8000/audioStream', // 替换为实际服务器地址
+    url: 'ws://172.20.10.2:8000/audioStream', // 替换为实际服务器地址
   });
 
   wx.onSocketOpen(function() {
@@ -42,11 +42,13 @@ function connectWebSocket(that) {
 
   wx.onSocketError(function(err) {
     console.error('WebSocket连接错误:', err);
+    that.audioCtx.close();
     that.socketOpen = false;
   });
 
   wx.onSocketClose(function() {
     console.log('WebSocket连接已关闭');
+    that.audioCtx.close();
     that.socketOpen = false;
   });
 };
@@ -54,11 +56,10 @@ function connectWebSocket(that) {
 
 function handleAudioFrame(audioData) {
   const self = this;
-  console.log('handleAudioFrame', this.globalData.isPlaying)
   this.globalData.audioDataQueue.push(audioData);
+  console.log('handleAudioFrame', this.globalData.isPlaying, this.globalData.audioDataQueue)
   if (!this.globalData.isPlaying) {
-      this.globalData.isPlaying = true;
-      util.audioPlayInit(this.globalData.audioDataQueue, () => {
+      util.audioPlayInit(this, this.audioCtx, this.globalData.audioDataQueue, () => {
         self.data.isPlaying = false;
       });
   }

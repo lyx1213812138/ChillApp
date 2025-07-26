@@ -1,5 +1,5 @@
 <!-- index.wxml -->
-<view class="container">
+<view class="container" bindtap="onTap">
   <!-- 相机预览模块 -->
   <view class="camera-container">
     <camera 

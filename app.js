@@ -13,7 +13,6 @@ App({
     agentTip: '',
   },
   onLaunch() {
-    websocket.connectWebSocket(this);
     console.log('App initialized with appid:', this.globalData.appid);
   },
 })

@@ -1,5 +1,6 @@
 
 const util = require('../../utils/util.js');
+const websocket = require('../../utils/webSocket.js');
 
 const Type = {
   audioFrame: 'audioFrame'
@@ -25,6 +26,22 @@ Page({
     this.initRecordEvents();
     this.checkRecordPermission();
     this.checkSurveyStatus();
+    getApp().audioCtx = wx.createWebAudioContext();
+    console.log('WebAudioContext created, state:', getApp().audioCtx.state);
+    if (getApp().audioCtx.state !== 'running') {
+      wx.showToast({
+        title: 'AudioContext is not running, please start it by tapping anywhere.',
+        icon: 'none',
+        duration: 2000
+      });
+    }
+    getApp().audioCtx.onstatechange = () => {
+      console.log('WebAudioContext state changed to:', getApp().audioCtx.state);
+      if (getApp().audioCtx.state === 'running') {
+        console.log('AudioContext is running');
+        websocket.connectWebSocket(getApp());
+      }
+    };
   },
 
   onReady() {
@@ -258,5 +275,17 @@ Page({
     this.cameraListner = null;
     console.log('Camera stopped');
   },
+
+  onTap() {
+    const that = getApp();
+    if (that.audioCtx.state !== 'running') {
+      console.log('AudioContext is not running, resuming...');
+      that.audioCtx.resume().then(() => {
+        console.log('AudioContext resumed');
+      }).catch(err => {
+        console.error('Error resuming AudioContext:', err);
+      });
+    };
+  }
   
 });
