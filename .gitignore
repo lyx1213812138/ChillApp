@@ -26,3 +26,4 @@ build/
 .git/
 
 privatedata.js
+privatedata.json
