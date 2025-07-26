@@ -52,7 +52,7 @@
 
 <!-- 授权弹窗 -->
 <view class="modal-mask" wx:if="{{showAuthModal}}">
-  <view class="auth-modal">
+  <view class="auth-modal"> 
     <view class="auth-title">授权登录</view>
     <view class="auth-content">为了提供个性化的拍照指导和风格推荐，我们需要获取你的公开信息（头像、昵称）。</view>
     <button class="auth-button" bindtap="handleAuthRequest">微信授权登录</button>
