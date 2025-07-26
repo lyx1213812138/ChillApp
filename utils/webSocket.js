@@ -5,6 +5,8 @@ this.data.audioDataQueue: []
 
 
 const util = require('./util.js');
+const privateInfo = require('../privatedata.js');
+
 const Type = {
     audioFrame: 'audioFrame',
     confJson: 'confJson',
@@ -14,7 +16,7 @@ function connectWebSocket(that) {
   that.socketOpen = false;
   that.globalData.isPlaying = false;
   wx.connectSocket({
-    url: 'ws://172.20.10.2:8000/audioStream', // 替换为实际服务器地址
+    url: 'ws://'+privateInfo.connectUrl+'/audioStream', // 替换为实际服务器地址
   });
 
   wx.onSocketOpen(function() {
@@ -61,7 +63,7 @@ function handleAudioFrame(audioData) {
   console.log('handleAudioFrame', this.globalData.isPlaying, this.globalData.audioDataQueue)
   if (!this.globalData.isPlaying) {
       util.audioPlayInit(this, this.audioCtx, this.globalData.audioDataQueue, () => {
-        self.data.isPlaying = false;
+        self.globalData.isPlaying = false;
       });
   }
 }

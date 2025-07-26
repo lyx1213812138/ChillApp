@@ -1,3 +1,5 @@
+const privatedata = require("../privatedata");
+
 function setUserConf() {
     wx.setStorageSync('userConfig', nowConf);
 }
@@ -8,7 +10,7 @@ function getUserConf() {
 
 async function audioPlayFrame(audioCtx, bufferbefore) {
   const decodeAsync = () => {
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       audioCtx.decodeAudioData(bufferbefore, buffer => {
         resolve(buffer);
       }, err => {
@@ -19,9 +21,11 @@ async function audioPlayFrame(audioCtx, bufferbefore) {
   const buffer = await decodeAsync();
   if (!buffer) {
     console.log('decodeAudioData fail', bufferbefore, bufferbefore.byteLength);
+  } else {
+      console.log('decodeAudioData success', buffer)
   }
   // const buffer = codeWAV(bufferbefore, 1, 16000);
-  console.log('audioPlayFrame', buffer, buffer.byteLength);
+//   const buffer = bufferbefore;
   const source = audioCtx.createBufferSource();
   source.buffer = buffer;
   source.connect(audioCtx.destination);
@@ -91,7 +95,7 @@ function postPicture(imageData) {
   console.log(imageData.byteLength)
   wx.request({
     // url: this.data.httpUrl,
-    url: 'http://172.20.10.2:8000/pictureStream',
+    url: 'http://'+privatedata.connectUrl+'/pictureStream',
     method: 'POST',
     header: {                        
       'content-type': 'application/octet-stream',

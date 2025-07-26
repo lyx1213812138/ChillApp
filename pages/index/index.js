@@ -13,7 +13,6 @@ Page({
       { id: 1, sender: 'user', content: '我想拍一张人像照片，有什么建议吗？' }
     ],
     hasRecordPermission: false,
-    socketOpen: false, // WebSocket连接状态, 暂时不检查
     isRecording: false, // 是否正在录音
     isButtonPressed: false, // 按钮是否被按下
     currentTip: '', // AI提示
@@ -101,7 +100,7 @@ Page({
     this.recorderManager.onStart(() => {
       console.log('录音已正式开始');
       that.setData({ isRecording: true });
-      if (that.data.socketOpen) {
+      if (getApp().socketOpen) {
         wx.sendSocketMessage({
           data: JSON.stringify({
             devType: 'WX',
@@ -128,7 +127,7 @@ Page({
 
     this.recorderManager.onFrameRecorded((res) => {
       const { frameBuffer } = res;
-      if (that.data.socketOpen) {
+      if (getApp().socketOpen) {
         wx.sendSocketMessage({
           data: frameBuffer,
           success: () => {
@@ -138,14 +137,13 @@ Page({
             console.error('音频帧发送失败:', err);
           }
         });
-        // wx.sendSocketMessage(...); // 暂时禁用上传
       }
     });
 
     this.recorderManager.onStop(() => {
       console.log('录音已结束');
       that.setData({ isRecording: false, isButtonPressed: false });
-      if (that.data.socketOpen) {
+      if (getApp().socketOpen) {
         wx.sendSocketMessage({
           data: JSON.stringify({
             devType: 'WX',
