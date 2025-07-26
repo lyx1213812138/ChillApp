@@ -11,25 +11,11 @@
   </view>
 
   <!-- 设备管理卡片 -->
-  <view class="card device-card">
-    <view class="card-title">设备管理</view>
-    <view class="device-list">
-      <block wx:for="{{devices}}" wx:key="id">
-        <view class="device-item" bindtap="manageDevice" data-device-id="{{item.id}}">
-          <image class="device-icon" src="{{item.icon}}"></image>
-          <view class="device-info">
-            <text class="device-name">{{item.name}}</text>
-            <view class="device-status {{item.connected ? 'connected' : 'disconnected'}}">
-              {{item.connected ? '已连接' : '未连接'}}
-            </view>
-          </view>
-          <image class="arrow-icon" src="/assets/icons/arrow-right.png" />
-        </view>
-      </block>
-      <view class="add-device" bindtap="addNewDevice">
-        <text class="add-icon">+</text>
-        <text class="add-text">添加新设备</text>
-      </view>
+  <view class="card">
+    <view class="card-title">通用</view>
+    <view class="list-item" bindtap="navigateToDevicePage">
+      <text>设备管理</text>
+      <image class="arrow-icon" src="/assets/icons/arrow-right.png" />
     </view>
   </view>
 

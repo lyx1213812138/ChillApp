@@ -56,7 +56,10 @@ function startPostImage() {
 }
 
 function stopPostImage(listener) {
-  listener.stop();
+  // 增加空值检查，防止重复调用或意外调用时报错
+  if (listener) {
+    listener.stop();
+  }
 }
 
 // TODO camera里配置压缩，bind事件
@@ -162,7 +165,7 @@ function searchFeishuBitableRecords(params) {
 
 function createFeishuBitableRecord(params) {
   return new Promise(async (resolve, reject) => {
-    const { appToken, tableId, age, conf, sex, wxid } = params;
+    const { appToken, tableId, age, conf, sex, wxid, rurl } = params; // 新增 rurl
     console.log(params);
     const accessToken = await requestFeishuAccessToken({ appId: params.appId, appSecret: params.appSecret });
     wx.request({
@@ -177,7 +180,8 @@ function createFeishuBitableRecord(params) {
           "age": age,
           "conf": conf,
           "sex": sex,
-          "wxid": wxid
+          "wxid": wxid,
+          "rurl": rurl // 新增 rurl 字段
         }
       },
       success(res) {

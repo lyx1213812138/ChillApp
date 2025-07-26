@@ -1,0 +1,19 @@
+<!-- pages/link-upload/link-upload.wxml -->
+<view class="container">
+  <view class="content">
+    <view class="title">分享你喜欢的作品</view>
+    <view class="subtitle">粘贴小红书的推文链接，可以帮助我们更精准地了解你的偏好</view>
+    
+    <textarea 
+      class="link-input" 
+      placeholder="粘贴小红书推文链接在这里..." 
+      maxlength="-1"
+      auto-height
+      value="{{rurl}}"
+      bindinput="onLinkInput"
+    ></textarea>
+
+    <button class="submit-btn primary-button" bindtap="submitLink">提交链接</button>
+    <button class="skip-btn secondary-button" bindtap="skip">跳过此步</button>
+  </view>
+</view>

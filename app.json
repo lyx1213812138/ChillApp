@@ -22,7 +22,8 @@
     "pages/login/login",
     "pages/settings/settings",
     "pages/preview/preview",
-    "pages/connect-device/connect-device"
+    "pages/connect-device/connect-device",
+    "pages/link-upload/link-upload"
   ],
   "window": {
     "navigationBarTitleText": "BeautyCap",

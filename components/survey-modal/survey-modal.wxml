@@ -6,13 +6,8 @@
       <view class="step-title">完善你的个人资料</view>
       <view class="step-subtitle">让我们更好地为你推荐风格</view>
 
-      <!-- 授权按钮 -->
-      <view class="auth-container" wx:if="{{!userInfo.nickName}}">
-        <button class="auth-btn primary-button" bindtap="triggerAuthorize">点击授权，完善资料</button>
-      </view>
-
       <!-- 授权后显示用户信息和表单 -->
-      <view class="form-group-container" wx:if="{{userInfo.nickName}}">
+      <view class="form-group-container">
         <view class="form-group">
           <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
           <view class="nickname">{{userInfo.nickName}}</view>

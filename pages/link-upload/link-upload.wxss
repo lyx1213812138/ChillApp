@@ -1,0 +1,50 @@
+/* pages/link-upload/link-upload.wxss */
+.container {
+  padding: 24px;
+  padding-top: calc(env(safe-area-inset-top) + 50px); /* 增加顶部内边距 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--background-color-base);
+  min-height: 100vh;
+  box-sizing: border-box; /* 确保 padding 不会影响总高度 */
+}
+
+.content {
+  width: 100%;
+  max-width: 600px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-color-primary);
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--text-color-secondary);
+  margin-bottom: 24px;
+}
+
+.link-input {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  box-sizing: border-box;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.skip-btn {
+  width: 100%;
+}

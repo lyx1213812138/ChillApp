@@ -17,19 +17,47 @@ Page({
     isButtonPressed: false, // 按钮是否被按下
     currentTip: '', // AI提示
     showSurvey: false, // 是否显示问卷
-    prefilledInfo: null // 用于预填问卷的用户信息
+    prefilledInfo: null, // 用于预填问卷的用户信息
+    showAuthModal: false // 新增：控制授权弹窗的显示
   },
 
   onLoad() {
     this.recorderManager = wx.getRecorderManager();
     this.initRecordEvents();
     this.checkRecordPermission();
-    this.checkSurveyStatus();
+
+    // 检查是否已授权，决定显示主内容还是授权弹窗
+    const userInfo = wx.getStorageSync('userInfo');
+    if (userInfo) {
+      this.checkSurveyStatus(); // 如果已授权，则检查是否需要填问卷
+    } else {
+      this.setData({ showAuthModal: true }); // 未授权，显示授权弹窗
+    }
 
     // 定义一个专门用来处理 agentTip 更新的函数，并绑定 this
     this.agentTipUpdateHandler = (newTip) => {
       this.setData({ currentTip: newTip });
     };
+  },
+
+  // 处理授权弹窗的点击事件
+  handleAuthRequest() {
+    wx.getUserProfile({
+      desc: '用于完善您的个人资料和偏好',
+      success: (res) => {
+        wx.showToast({ title: '授权成功', icon: 'success' });
+        wx.setStorageSync('userInfo', res.userInfo);
+        this.setData({ 
+          showAuthModal: false,
+          prefilledInfo: res.userInfo // 预填信息，以便问卷使用
+        });
+        // 授权成功后，再检查问卷状态
+        this.checkSurveyStatus();
+      },
+      fail: () => {
+        wx.showToast({ title: '授权后可获得更好体验', icon: 'none' });
+      }
+    });
   },
 
   onReady() {
@@ -188,23 +216,7 @@ Page({
     }
   },
 
-  // 此函数需要绑定到 WXML 中的授权按钮的 tap 事件
-  handleAuthorize() {
-    wx.getUserProfile({
-      desc: '用于完善您的个人资料和偏好',
-      success: (res) => {
-        // 将获取到的用户信息预填到问卷中
-        this.setData({ 
-          prefilledInfo: res.userInfo
-        });
-        wx.showToast({ title: '授权成功', icon: 'success' });
-      },
-      fail: () => {
-        // 如果用户拒绝，可以给一个提示
-        wx.showToast({ title: '授权后可获得个性化推荐', icon: 'none' });
-      }
-    });
-  },
+  
 
   onSurveySubmit(e) {
     const surveyResult = e.detail;
