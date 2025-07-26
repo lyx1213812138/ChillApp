@@ -23,9 +23,9 @@
     <view class="card-title">喜欢的风格</view>
     <view class="styles-grid">
       <!-- 这里可以根据 surveyResult.preferredStyles 来展示用户选择的风格图片 -->
-      <block wx:if="{{surveyResult.preferredStyles.length > 0}}">
-        <view class="style-tag" wx:for="{{surveyResult.preferredStyles}}" wx:key="*this">
-          风格ID: {{item}}
+      <block wx:if="{{preferredStyleNames.length > 0}}">
+        <view class="style-tag" wx:for="{{preferredStyleNames}}" wx:key="*this">
+          {{item}}
         </view>
       </block>
       <block wx:else>

@@ -32,7 +32,8 @@ function connectWebSocket(that) {
       } else if (data.cmd === 'StopAudioDn') {
         that.globalData.audioDataQueue = [];
       } else if (data.cmd === 'agentTip') {
-        that.globalData.agentTip = data.data;
+        // 调用 app.js 中的函数来更新 tip 并通知所有页面
+        that.updateAgentTip(data.data);
       }
     } else {
       handleAudioFrame.call(that, res.data);

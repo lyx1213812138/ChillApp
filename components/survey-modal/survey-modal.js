@@ -1,5 +1,6 @@
 const util = require('../../utils/util.js');
 const { APP_ID, APP_SECRET, APP_TOKEN, TABLE_ID } = require('../../utils/config.js');
+const { maleImageStyles, femaleImageStyles } = require('../../utils/style_config.js');
 
 Component({
   properties: {
@@ -31,36 +32,13 @@ Component({
     },
     genders: ['男', '女'],
     displayStyles: [], // 新增：用于渲染的图片数组
-    maleImageStyles: [
-      { id: 1, src: '/assets/survey-images/male/style1.jpg', selected: false, name: '运动街头' },
-      { id: 2, src: '/assets/survey-images/male/style2.jpg', selected: false, name: '复古港风' },
-      { id: 3, src: '/assets/survey-images/male/style3.jpg', selected: false, name: '简约商务' },
-      { id: 4, src: '/assets/survey-images/male/style4.jpg', selected: false, name: '户外探险' },
-      { id: 5, src: '/assets/survey-images/male/style5.jpg', selected: false, name: '文艺清新' },
-      { id: 6, src: '/assets/survey-images/male/style6.jpg', selected: false, name: '暗黑机能' },
-      { id: 7, src: '/assets/survey-images/male/style7.jpg', selected: false, name: '假日海滩' },
-      { id: 8, src: '/assets/survey-images/male/style8.jpg', selected: false, name: '居家生活' },
-      { id: 9, src: '/assets/survey-images/male/style9.jpg', selected: false, name: '潮流工装' }
-    ],
-    femaleImageStyles: [
-      { id: 1, src: '/assets/survey-images/female/style1.jpg', selected: false, name: '清新自然' },
-      { id: 2, src: '/assets/survey-images/female/style2.jpg', selected: false, name: '复古胶片' },
-      { id: 3, src: '/assets/survey-images/female/style3.jpg', selected: false, name: '黑白纪实' },
-      { id: 4, src: '/assets/survey-images/female/style4.jpg', selected: false, name: '都市夜景' },
-      { id: 5, src: '/assets/survey-images/female/style5.jpg', selected: false, name: '甜美日系' },
-      { id: 6, src: '/assets/survey-images/female/style6.jpg', selected: false, name: '简约ins' },
-      { id: 7, src: '/assets/survey-images/female/style7.jpg', selected: false, name: '浓郁油画' },
-      { id: 8, src: '/assets/survey-images/female/style8.jpg', selected: false, name: '赛博朋克' },
-      { id: 9, src: '/assets/survey-images/female/style9.jpg', selected: false, name: '国风古韵' }
-    ],
+    // 样式定义已移至 style_config.js
+    maleImageStyles: maleImageStyles.map(s => ({...s})), // 浅拷贝一份，避免组件间互相影响
+    femaleImageStyles: femaleImageStyles.map(s => ({...s})),
     selectedStyles: []
   },
 
   methods: {
-    triggerAuthorize() {
-      this.triggerEvent('authorize');
-    },
-
     onChooseAvatar(e) {
       this.setData({ 'userInfo.avatarUrl': e.detail.avatarUrl });
     },
@@ -106,55 +84,27 @@ Component({
     },
 
     submitSurvey() {
-      const app = getApp();
       const surveyResult = {
         userInfo: this.data.userInfo,
-        preferredStyles: this.data.selectedStyles
+        preferredStyles: this.data.selectedStyles,
+        // 将问卷组件内部的一些数据也打包，以便下一页使用
+        internalData: {
+          genders: this.data.genders,
+          maleImageStyles: this.data.maleImageStyles,
+          femaleImageStyles: this.data.femaleImageStyles
+        }
       };
 
-      // --- 数据适配，以匹配 util.js 的要求 ---
-
-      // 1. 计算年龄 (age)
-      let age = null;
-      const birthdayStr = this.data.userInfo.birthday;
-      if (birthdayStr) {
-        const birthDate = new Date(birthdayStr);
-        const today = new Date();
-        age = today.getFullYear() - birthDate.getFullYear();
-        const m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-          age--;
+      // 跳转到链接上传页面，并通过 eventChannel 传递数据
+      wx.navigateTo({
+        url: '/pages/link-upload/link-upload',
+        success: (res) => {
+          // 通过eventChannel向被打开页面传送数据
+          res.eventChannel.emit('acceptSurveyResult', { surveyResult: surveyResult })
         }
-      }
-
-      // 2. 获取性别 (sex)
-      const sex = this.data.genders[this.data.userInfo.gender];
-
-      // 3. 将偏好风格转换成纯文本字符串 (conf)
-      const conf = this.data.displayStyles
-        .filter(style => style.selected)
-        .map(style => style.name)
-        .join(', '); // 例如: "清新自然, 复古胶片"
-
-      // 4. 获取用户唯一标识 (wxid) - 暂时使用昵称作为替代，后续应替换为真实wxid
-      const wxid = this.data.userInfo.nickName || `user_${Date.now()}`;
-
-      // --- 调用封装好的飞书上传方法 ---
-      util.createFeishuBitableRecord({
-        // 直接从 config.js 导入常量，不再依赖 getApp()
-        appId: APP_ID,
-        appSecret: APP_SECRET,
-        appToken: APP_TOKEN,
-        tableId: TABLE_ID,
-        // 以下是飞书表格需要的字段
-        age: age,
-        sex: sex,
-        conf: conf,
-        wxid: wxid
       });
 
-      // 触发父组件的事件并关闭弹窗
-      this.triggerEvent('submit', surveyResult);
+      // 关闭当前的弹窗
       this.setData({ show: false });
     }
   }
