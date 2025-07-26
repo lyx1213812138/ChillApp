@@ -48,7 +48,9 @@
   </view>
 </view>
 
-<survey-modal show="{{showSurvey}}" prefilledInfo="{{prefilledInfo}}" bind:submit="onSurveySubmit"></survey-modal>
+<block wx:if="{{showSurvey}}">
+  <survey-modal show="{{showSurvey}}" prefilledInfo="{{prefilledInfo}}" bind:submit="onSurveySubmit"></survey-modal>
+</block>
 
 <!-- 授权弹窗 -->
 <view class="modal-mask" wx:if="{{showAuthModal}}">
