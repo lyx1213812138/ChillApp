@@ -229,25 +229,22 @@ function createFeishuBitableRecord(params) {
 }
 
 async function uploadImageToFeishu(params) {
-  const fsm = wx.getFileSystemManager();
   const { filePath, pic_id, wxid, appId, appSecret, appToken, tableId } = params;
 
   try {
-    // Step 1: Read the original file data.
-    const readFileResult = await new Promise((res, rej) => fsm.readFile({ filePath, success: res, fail: rej }));
+    // Step 1: Download the network image to a temporary file path.
+    const downloadResult = await new Promise((res, rej) => wx.downloadFile({ url: filePath, success: res, fail: rej }));
+    const tempFilePath = downloadResult.tempFilePath;
 
-    // Step 2: Create a temp file path and write the data.
-    const tempFilePath = `${wx.env.USER_DATA_PATH}/${pic_id}_${Date.now()}.jpg`;
-    await new Promise((res, rej) => fsm.writeFile({ filePath: tempFilePath, data: readFileResult.data, encoding: 'binary', success: res, fail: rej }));
-
-    // Step 3: Get stats for the newly created temp file.
+    // Step 2: Get stats for the newly created temp file.
+    const fsm = wx.getFileSystemManager();
     const statsResult = await new Promise((res, rej) => fsm.stat({ path: tempFilePath, success: res, fail: rej }));
     const fileSize = statsResult.stats.size;
 
-    // Step 4: Get Feishu Access Token.
+    // Step 3: Get Feishu Access Token.
     const accessToken = await requestFeishuAccessToken({ appId, appSecret });
 
-    // Step 5: Upload the temp file.
+    // Step 4: Upload the temp file.
     const uploadResult = await new Promise((res, rej) => {
       wx.uploadFile({
         url: 'https://open.feishu.cn/open-apis/drive/v1/medias/upload_all',
@@ -273,7 +270,7 @@ async function uploadImageToFeishu(params) {
     });
     const file_token = uploadResult;
 
-    // Step 6: Create the Bitable record.
+    // Step 5: Create the Bitable record.
     const createResult = await new Promise((res, rej) => {
       wx.request({
         url: `https://open.feishu.cn/open-apis/bitable/v1/apps/${appToken}/tables/${tableId}/records`,
