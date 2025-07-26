@@ -8,5 +8,6 @@ module.exports = {
   APP_ID: privateData.appid || '',
   APP_SECRET: privateData.appSecret || '',
   APP_TOKEN: privateData.appToken || '',
-  TABLE_ID: privateData.tableId || ''
+  TABLE_ID: privateData.tableId || '',
+  difyId: privateData.difyAppId || '',
 };

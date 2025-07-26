@@ -89,10 +89,9 @@ function stopPostImage(listener) {
   }
 }
 
-// TODO camera里配置压缩，bind事件
 function postPicture(imageData) {
   // 发送图片到服务器
-  console.log(imageData.byteLength)
+  console.log(imageData, typeof imageData)
   wx.request({
     // url: this.data.httpUrl,
     url: 'http://'+privatedata.connectUrl+'/pictureStream',
@@ -102,6 +101,7 @@ function postPicture(imageData) {
       'devType': 'WX',
       'cmd': 'SendPic',
       'picID': Date.now().toString(),
+      'content-length': imageData.byteLength
     },
     body: imageData,
     success: (res) => {

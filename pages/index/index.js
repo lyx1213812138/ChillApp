@@ -127,6 +127,7 @@ Page({
 
     this.recorderManager.onFrameRecorded((res) => {
       const { frameBuffer } = res;
+      console.log('onFrameRecorded', getApp().socketOpen)
       if (getApp().socketOpen) {
         wx.sendSocketMessage({
           data: frameBuffer,
@@ -259,12 +260,26 @@ Page({
 
   // 拍照
   takePhoto() {
-    console.log('takePhoto')
+    console.log('takePhoto');
     this.data.canPostImage = true;
     const ctx = wx.createCameraContext();
     ctx.takePhoto({
       quality: 'high',
       success: (res) => {
+        // 把临时文件读取出来，用postImage上传
+        const tempFilePath = res.tempImagePath;
+        wx.getFileSystemManager().readFile({
+          filePath: tempFilePath,
+          encoding: 'base64', 
+          success(fileRes) {
+            const arrayBuffer = wx.base64ToArrayBuffer(fileRes.data)
+            console.log('读取临时文件成功:', tempFilePath, fileRes, arrayBuffer.byteLength);
+            util.postPicture.call(this, arrayBuffer);
+          },
+          fail(err) {
+            console.error('读取临时文件失败:', err);
+          }
+        });
         wx.navigateTo({
           url: `/pages/preview/preview?imagePath=${res.tempImagePath}`
         });
@@ -284,13 +299,13 @@ Page({
   // binderror="onCameraError"
   // bindinitdone="onCameraInit"
   onCameraInit() {
-    this.cameraListner = util.startPostImage.call(this);
+    // this.cameraListner = util.startPostImage.call(this);
     this.data.canPostImage = true;
     console.log('Camera initialized');
   },
 
   onCameraStop() {
-    util.stopPostImage(this.cameraListner);
+    // util.stopPostImage(this.cameraListner);
     // clearInterval(this.postImageInterval);
     this.data.canPostImage = false;
     this.cameraListner = null;
