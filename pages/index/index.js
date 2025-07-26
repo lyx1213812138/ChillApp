@@ -25,6 +25,11 @@ Page({
     this.initRecordEvents();
     this.checkRecordPermission();
     this.checkSurveyStatus();
+
+    // 定义一个专门用来处理 agentTip 更新的函数，并绑定 this
+    this.agentTipUpdateHandler = (newTip) => {
+      this.setData({ currentTip: newTip });
+    };
   },
 
   onReady() {
@@ -32,16 +37,15 @@ Page({
   },
 
   onShow() {
-    // 页面显示时启动摄像头帧监听
-    // this.initCameraFrameListener();
+    // 页面显示时，注册对 agentTip 的监听
+    getApp().registerAgentTipListener(this.agentTipUpdateHandler);
+    // 页面显示时，立即用全局数据刷新一次，以防错过离线时的更新
+    this.setData({ currentTip: getApp().globalData.agentTip });
   },
 
   onHide() {
-    // 页面隐藏时停止摄像头帧监听
-    // if (this.cameraFrameListener) {
-    //   this.cameraFrameListener.stop();
-    //   console.log('[Camera Frame] 摄像头帧数据监听已停止');
-    // }
+    // 页面隐藏时，取消注册，避免内存泄漏和不必要的后台更新
+    getApp().unregisterAgentTipListener(this.agentTipUpdateHandler);
   },
 
   // 初始化录音事件监听
