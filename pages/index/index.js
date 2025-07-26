@@ -33,15 +33,15 @@ Page({
 
   onShow() {
     // 页面显示时启动摄像头帧监听
-    this.initCameraFrameListener();
+    // this.initCameraFrameListener();
   },
 
   onHide() {
     // 页面隐藏时停止摄像头帧监听
-    if (this.cameraFrameListener) {
-      this.cameraFrameListener.stop();
-      console.log('[Camera Frame] 摄像头帧数据监听已停止');
-    }
+    // if (this.cameraFrameListener) {
+    //   this.cameraFrameListener.stop();
+    //   console.log('[Camera Frame] 摄像头帧数据监听已停止');
+    // }
   },
 
   // 初始化录音事件监听
@@ -171,37 +171,6 @@ Page({
     }
     console.log('松开按钮，调用 stop');
     this.recorderManager.stop();
-  },
-
-  initCameraFrameListener() {
-    const that = this;
-    const cameraContext = wx.createCameraContext();
-    let lastUploadTime = 0;
-    const uploadInterval = 100; // 100ms, 对应 10fps
-
-    this.cameraFrameListener = cameraContext.onCameraFrame((frame) => {
-      const now = Date.now();
-      if (now - lastUploadTime < uploadInterval) {
-        return; // 未达到上传时间间隔，丢弃此帧
-      }
-      lastUploadTime = now;
-
-      // 在这里处理帧数据，例如上传到云端
-      console.log(`[Camera Frame] 模拟上传帧数据，尺寸: ${frame.width}x${frame.height}`);
-      
-      // 伪代码：上传逻辑
-      // const frameData = new Uint8Array(frame.data); // 帧数据是 ArrayBuffer，需要转换
-      // wx.request({
-      //   url: 'YOUR_UPLOAD_URL',
-      //   method: 'POST',
-      //   data: frameData.buffer,
-      //   // ...其他参数
-      // });
-    });
-
-    // 启动监听
-    this.cameraFrameListener.start();
-    console.log('[Camera Frame] 摄像头帧数据监听已启动');
   },
 
   checkSurveyStatus() {

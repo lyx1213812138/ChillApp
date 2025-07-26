@@ -8,6 +8,9 @@ App({
     appSecret: APP_SECRET,
     appToken: APP_TOKEN,
     tableId: TABLE_ID,
+    isPlaying: false,
+    audioDataQueue: [],
+    agentTip: '',
   },
   onLaunch() {
     websocket.connectWebSocket(this);

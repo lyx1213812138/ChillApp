@@ -28,6 +28,7 @@ async function audioPlayInit(audioCtx, queue, cb) {
     if (queue.length === 0) return;
     let sourceNode = null;
     const play = async () => {
+      console.log('playing')
       sourceNode = await audioPlayFrame(audioCtx, queue.shift());
       sourceNode.onEnd(() => {
         if (queue.length === 0) {

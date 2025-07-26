@@ -12,8 +12,9 @@ const Type = {
 
 function connectWebSocket(that) {
   that.socketOpen = false;
+  that.globalData.isPlaying = false;
   wx.connectSocket({
-    url: 'ws://192.168.150.97:8000/audioStream', // 替换为实际服务器地址
+    url: 'ws://192.168.150.11:8000/audioStream', // 替换为实际服务器地址
   });
 
   wx.onSocketOpen(function() {
@@ -25,14 +26,13 @@ function connectWebSocket(that) {
     console.log('receive message', res)
     if (typeof res.data === 'string') { // cmd
       const data = JSON.parse(res.data);
+      console.log('receive cmd', data);
       if (data.cmd === 'StartAudioDn') {
-        util.audioPlayInit(this.data.audioDataQueue, () => {
-          that.data.isPlaying = false;
-        });
+        that.globalData.isPlaying = false;
       } else if (data.cmd === 'StopAudioDn') {
-        that.data.audioDataQueue = [];
+        that.globalData.audioDataQueue = [];
       } else if (data.cmd === 'agentTip') {
-        that.setData({ agentTip: data.data });
+        that.globalData.agentTip = data.data;
       }
     } else {
       handleAudioFrame.call(that, res.data);
@@ -54,14 +54,14 @@ function connectWebSocket(that) {
 
 function handleAudioFrame(audioData) {
   const self = this;
-  if (!this.data.isPlaying) {
-      this.data.isPlaying = true;
-      util.audioPlayInit(this.data.audioDataQueue, () => {
+  console.log('handleAudioFrame', this.globalData.isPlaying)
+  this.globalData.audioDataQueue.push(audioData);
+  if (!this.globalData.isPlaying) {
+      this.globalData.isPlaying = true;
+      util.audioPlayInit(this.globalData.audioDataQueue, () => {
         self.data.isPlaying = false;
       });
   }
-  console.log(header);
-  this.audioDataQueue.push(audioData);
 }
 
 module.exports = {
