@@ -228,6 +228,77 @@ function createFeishuBitableRecord(params) {
   });
 }
 
+async function uploadImageToFeishu(params) {
+  const fsm = wx.getFileSystemManager();
+  const { filePath, pic_id, wxid, appId, appSecret, appToken, tableId } = params;
+
+  try {
+    // Step 1: Read the original file data.
+    const readFileResult = await new Promise((res, rej) => fsm.readFile({ filePath, success: res, fail: rej }));
+
+    // Step 2: Create a temp file path and write the data.
+    const tempFilePath = `${wx.env.USER_DATA_PATH}/${pic_id}_${Date.now()}.jpg`;
+    await new Promise((res, rej) => fsm.writeFile({ filePath: tempFilePath, data: readFileResult.data, encoding: 'binary', success: res, fail: rej }));
+
+    // Step 3: Get stats for the newly created temp file.
+    const statsResult = await new Promise((res, rej) => fsm.stat({ path: tempFilePath, success: res, fail: rej }));
+    const fileSize = statsResult.stats.size;
+
+    // Step 4: Get Feishu Access Token.
+    const accessToken = await requestFeishuAccessToken({ appId, appSecret });
+
+    // Step 5: Upload the temp file.
+    const uploadResult = await new Promise((res, rej) => {
+      wx.uploadFile({
+        url: 'https://open.feishu.cn/open-apis/drive/v1/medias/upload_all',
+        filePath: tempFilePath,
+        name: 'file',
+        header: { 'Authorization': `Bearer ${accessToken}` },
+        formData: {
+          file_name: `${pic_id}.jpg`,
+          parent_type: 'bitable_image',
+          parent_node: appToken,
+          size: fileSize.toString()
+        },
+        success: uploadRes => {
+          const data = JSON.parse(uploadRes.data);
+          if (data.code === 0 && data.data.file_token) {
+            res(data.data.file_token);
+          } else {
+            rej(new Error(`飞书图片上传失败: ${data.msg}`));
+          }
+        },
+        fail: rej
+      });
+    });
+    const file_token = uploadResult;
+
+    // Step 6: Create the Bitable record.
+    const createResult = await new Promise((res, rej) => {
+      wx.request({
+        url: `https://open.feishu.cn/open-apis/bitable/v1/apps/${appToken}/tables/${tableId}/records`,
+        method: 'POST',
+        header: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` },
+        data: { fields: { image: [{ file_token }], pic_id, wxid } },
+        success: createRes => {
+          if (createRes.statusCode === 200 && createRes.data.code === 0) {
+            res(createRes.data.data);
+          } else {
+            rej(new Error(`飞书多维表格创建图片记录失败: ${createRes.data.msg}`));
+          }
+        },
+        fail: rej
+      });
+    });
+
+    return createResult;
+
+  } catch (err) {
+    console.error('uploadImageToFeishu 过程出错:', err);
+    throw err;
+  }
+}
+
 // 一些工具函数，将数据进行转码、封装
 function encodeWAV(samples, numChannels = 1, sampleRate = 16000) {
 	var buffer = new ArrayBuffer(44 + samples.byteLength);
@@ -274,5 +345,6 @@ module.exports = {
   requestFeishuAccessToken,
   searchFeishuBitableRecords,
   createFeishuBitableRecord,
+  uploadImageToFeishu,
   encodeWAV,
 }

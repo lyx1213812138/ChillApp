@@ -10,4 +10,6 @@ module.exports = {
   APP_TOKEN: privateData.appToken || '',
   TABLE_ID: privateData.tableId || '',
   difyId: privateData.difyAppId || '',
+  IMAGE_APP_TOKEN: privateData.imageAppToken || '',
+  IMAGE_TABLE_ID: privateData.imageTableId || ''
 };
